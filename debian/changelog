@@ -1,0 +1,6 @@
+wireless-regdb (2026.09.07-1) UNRELEASED; urgency=medium
+
+  * Reconstruct wireless-regdb build and packaging infrastructure from upstream.
+  * Add pinned regulatory source synchronization and signing safeguards.
+
+ -- Aura Ecosystem <auraecosystem@users.noreply.github.com>  Mon, 07 Sep 2026 01:00:00 +0000

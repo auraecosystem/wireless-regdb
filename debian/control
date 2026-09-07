@@ -1,0 +1,16 @@
+Source: wireless-regdb
+Section: net
+Priority: optional
+Maintainer: Aura Ecosystem <auraecosystem@users.noreply.github.com>
+Build-Depends: debhelper-compat (= 13), openssl, python3, python3-m2crypto
+Standards-Version: 4.7.0
+Rules-Requires-Root: no
+Homepage: https://github.com/sforshee/wireless-regdb
+
+Package: wireless-regdb
+Architecture: all
+Depends: ${misc:Depends}
+Description: wireless regulatory database
+ Regulatory database used by Linux wireless regulatory support.
+ This package builds both the legacy regulatory.bin and modern
+ regulatory.db formats from the authoritative db.txt source.

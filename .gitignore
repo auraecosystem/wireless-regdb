@@ -1,0 +1,11 @@
+*.pyc
+__pycache__/
+*.gz
+*.bin
+*.db
+*.p7s
+*.key.priv.pem
+*.x509.pem
+.custom
+debian/build/
+debian/stamps/

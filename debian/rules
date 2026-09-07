@@ -1,0 +1,26 @@
+#!/usr/bin/make -f
+export CRDA_PATH = /lib/crda
+export REGDB_AUTHOR = auraecosystem
+export V = 1
+export LSB_ID = Debian/Ubuntu
+
+%:
+	dh $@
+
+override_dh_auto_configure:
+	mkdir -p debian/stamps
+	touch debian/stamps/configure
+
+override_dh_auto_build:
+	$(MAKE) all
+
+override_dh_auto_clean:
+	$(MAKE) maintainer-clean || true
+	rm -rf debian/build debian/stamps
+	rm -f $(REGDB_AUTHOR).key.pub.pem $(REGDB_AUTHOR).x509.pem .custom
+
+override_dh_install:
+	install -d debian/wireless-regdb/lib/crda debian/wireless-regdb/lib/firmware
+	install -m 0644 regulatory.bin debian/wireless-regdb/lib/crda/
+	install -m 0644 regulatory.db regulatory.db.p7s debian/wireless-regdb/lib/firmware/
+	install -m 0644 sforshee.key.pub.pem debian/wireless-regdb/lib/crda/pubkeys/
