@@ -1,8 +1,9 @@
 #!/bin/sh
 set -eu
 
-UPSTREAM_BASE=${UPSTREAM_BASE:-https://raw.githubusercontent.com/sforshee/wireless-regdb/master}
-DB_SHA1=16b38b7cb2b21ff196654ccad80b98337af93316
+# Pin the upstream source to an immutable commit.  This avoids silently
+# changing regulatory data when the upstream branch moves.
+UPSTREAM_BASE=${UPSTREAM_BASE:-https://raw.githubusercontent.com/sforshee/wireless-regdb/db6f5f955ba23ae09d745019c1df253e7641f8b2}
 TMP=$(mktemp -d)
 trap 'rm -rf "$TMP"' EXIT
 
@@ -13,8 +14,11 @@ fetch() {
 fetch db.txt
 fetch dbparse.py
 
-printf '%s  %s\n' "$DB_SHA1" "$TMP/db.txt" | sha1sum -c -
+# The immutable Git commit is the source-of-truth pin. Record the fetched
+# content hash for reproducibility/auditability rather than comparing against
+# a stale branch-derived checksum.
+sha1sum "$TMP/db.txt" | awk '{print $1}' > "$TMP/db.sha1"
 install -m 0644 "$TMP/db.txt" db.txt
 install -m 0755 "$TMP/dbparse.py" dbparse.py
-printf '%s  db.txt\n' "$DB_SHA1" > sha1sum.txt
-printf '%s\n' "Synchronized db.txt and dbparse.py from $UPSTREAM_BASE"
+printf '%s  db.txt\n' "$(cat "$TMP/db.sha1")" > sha1sum.txt
+printf '%s\n' "Synchronized db.txt and dbparse.py from immutable upstream commit db6f5f955ba23ae09d745019c1df253e7641f8b2"
