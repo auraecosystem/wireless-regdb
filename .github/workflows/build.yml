@@ -1,0 +1,26 @@
+name: Build wireless-regdb
+
+on:
+  push:
+  pull_request:
+
+permissions:
+  contents: read
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y openssl python3 python3-m2crypto
+      - name: Sync pinned upstream source
+        run: sh scripts/sync-upstream-db.sh
+      - name: Verify source hash
+        run: sha1sum -c sha1sum.txt
+      - name: Build databases
+        run: make REGDB_AUTHOR=ci
+      - name: Verify generated artifacts exist
+        run: test -s regulatory.bin && test -s regulatory.db && test -s regulatory.db.p7s
